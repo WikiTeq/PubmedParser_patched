@@ -256,7 +256,12 @@ class Article
 			$author = $this->authors[$index];
 			if ( $useInitial ) {
 				$i = $this->initials[$index];
-				$iarray = str_split($i, 1);
+				/// Allows for splitting multibyte characters
+				if (function_exists('mb_str_split')) {
+					$iarray = mb_str_split($i, 1, 'UTF-8');
+				} else {
+					$iarray = preg_split('//u', $i, -1, PREG_SPLIT_NO_EMPTY);
+				}
 				$i = implode( Extension::$initialPeriod, $iarray)
 					. Extension::$initialPeriod;
 				// Spaces in the "Pubmedparser-initialperiod" system message must be
