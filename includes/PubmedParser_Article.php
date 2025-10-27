@@ -269,8 +269,12 @@ class Article
 				// processing. In order to remove the trailing "&nbsp;" after
 				// concatenating all authors and initials, we use the trim function
 				// with " \xc2\xa0".
-				$author = trim( $author . Extension::$initialSeparator
-					. ' ' . $i, " \xc2\xa0");
+				// Note: the use of " \xc2\xa0" is wrong since trim() treats the
+				// characters as individual options to trim; do that manually
+				// with regex
+				$author = $author . Extension::$initialSeparator . ' ' . $i;
+				$author = mb_ereg_replace( "/^[ \xc2\xa0]+/", '', $author );
+				$author = mb_ereg_replace( "/[ \xc2\xa0]+$/", '', $author );
 			}
 			return $author;
 		} else {
