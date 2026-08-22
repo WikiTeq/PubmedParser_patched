@@ -255,10 +255,10 @@ class Article
 	private function authorName( $index, $useInitial = false ) {
 		if ( $index < count( $this->authors ) ) {
 			$author = $this->authors[ $index ];
-			if ( $useInitial && is_array( $this->initials ) && sizeof( $this->initials ) >= $index ) {
+			if ( $useInitial && is_array( $this->initials ) && sizeof( $this->initials ) > $index ) {
 				$i = $this->initials[ $index ];
 				$iarray = str_split( $i, 1 );
-				$i = implode( Extension::$initialPeriod || '', $iarray ) . Extension::$initialPeriod;
+				$i = implode( Extension::$initialPeriod ?: '', $iarray ) . Extension::$initialPeriod;
 				// Spaces in the "Pubmedparser-initialperiod" system message must be
 				// encoded as "&nbsp;", lest they be removed by MediaWiki's text
 				// processing. In order to remove the trailing "&nbsp;" after
