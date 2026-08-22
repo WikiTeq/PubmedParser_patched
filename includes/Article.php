@@ -52,7 +52,7 @@ class Article
 			$this->pmid = $pmid;
 			$this->xml = $xml;
 			$this->parse( $reader );
-		} catch ( Exception $e ) {
+		} catch ( \Throwable $e ) {
 			$this->xml = false;
 			$this->message = $e->getMessage();
 		}
