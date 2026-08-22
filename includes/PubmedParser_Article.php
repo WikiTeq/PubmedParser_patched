@@ -254,7 +254,7 @@ class Article
 	private function authorName( $index, $useInitial = false ) {
 		if ( $index < count( $this->authors ) ) {
 			$author = $this->authors[$index];
-			if ( $useInitial ) {
+			if ( $useInitial && is_array($this->initials) && sizeof($this->initials) > $index ) {
 				$i = $this->initials[$index];
 				/// Allows for splitting multibyte characters
 				if (function_exists('mb_str_split')) {
