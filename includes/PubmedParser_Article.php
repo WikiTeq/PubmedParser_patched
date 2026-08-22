@@ -273,8 +273,8 @@ class Article
 				// characters as individual options to trim; do that manually
 				// with regex
 				$author = $author . Extension::$initialSeparator . ' ' . $i;
-				$author = mb_ereg_replace( "/^[ \xc2\xa0]+/", '', $author );
-				$author = mb_ereg_replace( "/[ \xc2\xa0]+$/", '', $author );
+				$author = mb_ereg_replace( '^[ \xc2\xa0]+', '', $author );
+				$author = mb_ereg_replace( '[ \xc2\xa0]+$', '', $author );
 			}
 			return $author;
 		} else {
