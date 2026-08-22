@@ -29,6 +29,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  */
 class Helpers
 {
+	/// Seconds to wait for a connection to the remote host.
+	const CONNECT_TIMEOUT = 5;
+
+	/// Seconds to wait for the whole remote request.
+	const REQUEST_TIMEOUT = 15;
+
 	public static function FetchRemote($uri, &$result) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'PubmedParser' );
 		$method = $config->get( 'PubmedParserRemoteFetchMethod' );
@@ -36,18 +42,34 @@ class Helpers
 		try {
 			switch ( $method ) {
 				case 'curl':
+					if ( !extension_loaded( 'curl' ) ) {
+						return false;
+					}
 					$curl = curl_init( $uri );
 					curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+					curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, self::CONNECT_TIMEOUT );
+					curl_setopt( $curl, CURLOPT_TIMEOUT, self::REQUEST_TIMEOUT );
 					$result = curl_exec( $curl );
+					$ok = is_string( $result ) && $result !== ''
+						&& curl_getinfo( $curl, CURLINFO_HTTP_CODE ) < 400;
 					curl_close( $curl );
+					if ( !$ok ) {
+						return false;
+					}
 					break;
 				default:
-					$result = file_get_contents( $uri );
+					$context = stream_context_create( array(
+						'http' => array( 'timeout' => self::REQUEST_TIMEOUT ),
+					) );
+					$result = file_get_contents( $uri, false, $context );
+					if ( $result === false || $result === null || $result === '' ) {
+						return false;
+					}
 					break;
 			}
 			return true;
 		} catch ( \Throwable $th ) {
-			$result = $th;
+			$result = null;
 			return false;
 		}
 	}
