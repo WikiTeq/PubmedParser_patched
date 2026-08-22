@@ -26,6 +26,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class Article
 {
 	public $authors = array();
+	public $initials;
 	public $collectiveName;
 	public $title;
 	public $abstract;
@@ -51,7 +52,7 @@ class Article
 			$this->pmid = $pmid;
 			$this->xml = $xml;
 			$this->parse( $reader );
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$this->xml = false;
 			$this->message = $e->getMessage();
 		}
@@ -221,7 +222,7 @@ class Article
 
 	/// Returns the journal name with all words capitalized.
 	function journalCaps() {
-		return ucwords( $this->title );
+		return ucwords( $this->journal );
 	}
 
 	/// Returns the first page of the article.
@@ -254,7 +255,7 @@ class Article
 	private function authorName( $index, $useInitial = false ) {
 		if ( $index < count( $this->authors ) ) {
 			$author = $this->authors[$index];
-			if ( $useInitial ) {
+			if ( $useInitial && is_array($this->initials) && sizeof($this->initials) > $index ) {
 				$i = $this->initials[$index];
 				/// Allows for splitting multibyte characters
 				if (function_exists('mb_str_split')) {
