@@ -222,7 +222,7 @@ class Article
 
 	/// Returns the journal name with all words capitalized.
 	function journalCaps() {
-		return ucwords( $this->title );
+		return ucwords( $this->journal );
 	}
 
 	/// Returns the first page of the article.
