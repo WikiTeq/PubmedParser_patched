@@ -51,7 +51,7 @@ class Article
 			$this->pmid = $pmid;
 			$this->xml = $xml;
 			$this->parse( $reader );
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$this->xml = false;
 			$this->message = $e->getMessage();
 		}
@@ -221,7 +221,7 @@ class Article
 
 	/// Returns the journal name with all words capitalized.
 	function journalCaps() {
-		return ucwords( $this->title );
+		return ucwords( $this->journal );
 	}
 
 	/// Returns the first page of the article.
