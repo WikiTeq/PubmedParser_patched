@@ -26,6 +26,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class Article
 {
 	public $authors = array();
+	public $initials;
 	public $collectiveName;
 	public $title;
 	public $abstract;
